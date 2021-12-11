@@ -3,7 +3,7 @@ vertfiles := $(patsubst txt/%, vert/%, $(txtfiles:.txt=.vert))
 metafiles := $(vertfiles:.vert=.meta)
 ## corpus build setup
 ## corpora
-corpbasename := detcorpus
+corpbasename := kritika
 corpsite := detcorpus
 corpora := kritika
 corpora-vert := $(addsuffix .vert, $(corpora))
@@ -69,6 +69,8 @@ lemmatize: $(vertfiles) scripts/mystem2vert.py
 metavert: $(metafiles)
 
 compile: $(compiled)
+
+export: export/$(corpbasename).tar.xz
 
 test:
 	python3 test/metadata.py

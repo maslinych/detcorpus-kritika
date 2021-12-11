@@ -1,7 +1,7 @@
 PATH "./export/data/kritika"
 VERTICAL "./export/vert/kritika.vert"
 ENCODING "utf-8"
-LANGUAGE "Корпус критики детской литературы (19290—1940)"
+LANGUAGE "ДетКорпус.Критика"
 LOCALE "ru_RU"
 MAINTAINER "Kirill Maslinsky"
 INFO "Корпус критики детской литературы (1920—1940)."

@@ -69,9 +69,9 @@ create-testing-local:
 	sh ./remote/create-hsh.sh $(localroot)
 	hsh-run --rooter $(localroot)/testing -- sh -x setup-bonito.sh $(corpsite) $(corpora)
 
-install-local-%: export/%.tar.xz
+install-local-%: $(localarch)/%.tar.xz
 	sh ./remote/stop-env.sh $(localroot) testing
-	echo $(corpsite-$*) $(corpora-$*) > $(localarch)/$*.setup.txt"
+	echo "$(corpsite-$*) $(corpora-$*)" > $(localarch)/$*.setup.txt
 	sh ./remote/install-corpus.sh $(localarch) $(localroot) $* 
 	sh ./remote/start-env.sh testing
 
