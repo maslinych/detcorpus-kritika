@@ -1,0 +1,49 @@
+PATH "./export/data/kritika"
+VERTICAL "./export/vert/kritika.vert"
+ENCODING "utf-8"
+LANGUAGE "Корпус критики детской литературы (19290—1940)"
+LOCALE "ru_RU"
+MAINTAINER "Kirill Maslinsky"
+INFO "Корпус критики детской литературы (1920—1940)."
+INFOHREF "http://detcorpus.ru/kritika"
+TAGSETDOC "https://tech.yandex.ru/mystem/doc/grammemes-values-docpage/"
+WPOSLIST ",прилагательное,A,наречие,ADV,местоименное наречие,ADVPRO,числительное-прилагательное,ANUM,местоимение-прилагательное,APRO,часть композита - сложного слова,COM,союз,CONJ,междометие,INTJ,числительное,NUM,частица,PART,предлог,PR,существительное,S,местоимение-существительное,SPRO,глагол,V"
+
+ATTRIBUTE word
+ATTRIBUTE lemma 
+ATTRIBUTE tag 
+ATTRIBUTE constant {
+    MULTIVALUE yes
+    MULTISEP "|"
+}
+ATTRIBUTE variable {
+    MULTIVALUE yes
+    MULTISEP "|"
+}
+
+STRUCTURE doc {
+    ATTRIBUTE id
+    ATTRIBUTE author {
+    	MULTIVALUE yes
+	MULTISEP ";"
+    }
+    ATTRIBUTE title
+    ATTRIBUTE periodical
+    ATTRIBUTE year {
+        NUMERIC yes
+    }
+    ATTRIBUTE month
+    ATTRIBUTE number
+    ATTRIBUTE date
+    ATTRIBUTE wordcount
+}
+STRUCTURE f {
+    ATTRIBUTE id
+}
+STRUCTURE s {
+    DISPLAYTAG 0
+}
+
+SHORTREF "=doc.author,=doc.title,=doc.year,=doc.periodical"
+MAXCONTEXT 200
+MAXDETAIL 500

@@ -3,14 +3,14 @@ vertfiles := $(patsubst txt/%, vert/%, $(txtfiles:.txt=.vert))
 metafiles := $(vertfiles:.vert=.meta)
 ## corpus build setup
 ## corpora
-corpbasename := hymnography
-corpsite := hymnography
-corpora := hymnography
+corpbasename := detcorpus
+corpsite := detcorpus
+corpora := kritika
 corpora-vert := $(addsuffix .vert, $(corpora))
 compiled := $(patsubst %,export/data/%/word.lex,$(corpora))
 ## Remote corpus installation data
-corpsite-hymnography := hymnography
-corpora-hymnography := hymnography
+corpsite-kritika := detcorpus
+corpora-kritika := kritika
 # SETUP CREDENTIALS
 HOST=detcorpus
 # CHROOTS
@@ -59,16 +59,16 @@ else
 endif
 	sed -i 's,./export,/var/lib/manatee/,' export/registry/$*
 
-export/hymnography.tar.xz: $(compiled)
+export/kritika.tar.xz: $(compiled)
 	rm -f $@
-	bash -c "pushd export ; tar cJvf hymnography.tar.xz --mode='a+r' * ; popd"
-
+	bash -c "pushd $(@D) ; tar cJvf $(@F) --mode='a+r' * ; popd"
 
 
 lemmatize: $(vertfiles) scripts/mystem2vert.py
 
 metavert: $(metafiles)
 
+compile: $(compiled)
 
 test:
 	python3 test/metadata.py
