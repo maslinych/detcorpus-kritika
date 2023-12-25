@@ -32,10 +32,10 @@ STRUCTURE doc {
     ATTRIBUTE year {
         NUMERIC yes
     }
-    ATTRIBUTE month
     ATTRIBUTE number
+    ATTRIBUTE month
     ATTRIBUTE date
-    ATTRIBUTE wordcount
+    ATTRIBUTE pages
 }
 STRUCTURE f {
     ATTRIBUTE id
