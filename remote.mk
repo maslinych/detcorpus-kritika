@@ -73,7 +73,8 @@ install-local-%: $(localarch)/%.tar.xz
 	sh ./remote/stop-env.sh $(localroot) testing
 	echo "$(corpsite-$*) $(corpora-$*)" > $(localarch)/$*.setup.txt
 	sh ./remote/install-corpus.sh $(localarch) $(localroot) $* 
-	sh ./remote/start-env.sh testing
+	sh ./remote/start-env.sh $(localroot) testing
+	tmux send-keys -t testing:0 "sed -i '/URL_BONITO/s/localhost/localhost:8098/' /var/www/crystal/config.js" Enter
 
 start-local:
 	sh ./remote/start-env.sh $(localroot) testing

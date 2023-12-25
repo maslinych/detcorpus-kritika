@@ -6,7 +6,7 @@ other_chroot="production"
 
 mkdir -p "$hasher_chroot"
 
-chroot_user="$(stat -c %U $other_chroot/chroot/var/)"
+chroot_user="$(stat -c %U $other_chroot/chroot/var/)" || chroot_user="corpora_a1"
 
 if [ "$chroot_user" == "corpora_a1" ] 
 then number_opt="--number=0"
