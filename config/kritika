@@ -1,5 +1,5 @@
-PATH "./export/data/kritika"
-VERTICAL "./export/vert/kritika.vert"
+PATH "/var/lib/manatee/data/kritika"
+VERTICAL "/var/lib/manatee/vert/kritika.vert"
 ENCODING "utf-8"
 LANGUAGE "ДетКорпус.Критика"
 LOCALE "ru_RU"
