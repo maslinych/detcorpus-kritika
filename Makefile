@@ -1,5 +1,6 @@
 txtfiles := $(shell git ls-files txt/*.txt)
-vertfiles := $(patsubst txt/%, vert/%, $(txtfiles:.txt=.vert))
+emigrantfiles := $(shell git ls-files emigranty/*.txt)
+vertfiles := $(patsubst txt/%, vert/%, $(txtfiles:.txt=.vert)) $(patsubst emigranty/%, vert/%, $(emigrantfiles:.txt=.vert)) 
 metafiles := $(vertfiles:.vert=.meta)
 ## corpus build setup
 ## corpora
@@ -7,10 +8,12 @@ corpbasename := kritika
 corpsite := detcorpus
 corpora := kritika
 corpora-vert := $(addsuffix .vert, $(corpora))
-compiled := $(patsubst %,export/data/%/word.lex,$(corpora))
+compiled := $(corpbasename).vert
+configs := config/kritika config/kritika.subcorpora
 ## Remote corpus installation data
 corpsite-kritika := detcorpus
 corpora-kritika := kritika
+remotearch := corpora
 # SETUP CREDENTIALS
 HOST=detcorpus
 # CHROOTS
@@ -21,7 +24,7 @@ TESTPORT=8098
 PRODPORT=8099
 RSYNC=rsync -avP --stats -e ssh
 ## remote operation scripts
-include remote.mk
+#include remote.mk
 
 
 .PHONY: test
@@ -36,6 +39,12 @@ vert/%.vert: txt/%.txt | vert
 		sed 's/[^[:print:]]//g' | \
 		python3 scripts/mystem2vert.py '$@' > '$@'
 
+vert/%.vert: emigranty/%.txt | vert
+		sed -e 's/<\?[pрPР]\([0-9]\+\)>\?/PB\1/' $< | \
+		mystem -n -d -i -g -c -s --format xml | \
+		sed 's/[^[:print:]]//g' | \
+		python3 scripts/mystem2vert.py '$@' > '$@'
+
 %.meta: %.vert metadata.csv scripts/getfilemeta.py
 	sed -i -e  "1c $$(python3 scripts/getfilemeta.py metadata.csv $(*F))" $<
 	touch $@
@@ -44,25 +53,14 @@ kritika.vert: $(metafiles) metadata.csv scripts/getfileids.py
 	rm -f $@
 	python3 scripts/getfileids.py metadata.csv | while read f ; do cat $$f >> $@ ; done
 
-export/data/%/word.lex: config/% %.vert
-	rm -rf export/data/$*
-	rm -f export/registry/$*
-	mkdir -p $(@D)
-	mkdir -p export/registry
-	mkdir -p export/vert
-	encodevert -c ./$< -p $(@D) $*.vert
-	cp $< export/registry
-ifeq ("$(wildcard config/$*.subcorpora)","")
-	echo "no subcorpora defined for $*:: $(wildcard config/$*.subcorpora)"
-else
-	mksubc ./export/registry/$* export/data/$*/subcorp config/$*.subcorpora
-endif
-	sed -i 's,./export,/var/lib/manatee/,' export/registry/$*
 
-export/kritika.tar.xz: $(compiled)
+export/$(corpbasename).tar.xz: $(compiled) $(configs)
 	rm -f $@
-	bash -c "pushd $(@D) ; tar cJvf $(@F) --mode='a+r' * ; popd"
-
+	rm -f export/registry/*
+	rm -f export/vert/*
+	cp $(compiled) export/vert/
+	cp $(configs) export/registry/
+	bash -c "pushd $(@D) ; tar cJvf $(@F) --mode='a+r' registry/ vert/ ; popd"
 
 lemmatize: $(vertfiles) scripts/mystem2vert.py
 
@@ -70,7 +68,13 @@ metavert: $(metafiles)
 
 compile: $(compiled)
 
-export: export/$(corpbasename).tar.xz
+pack-files: export/$(corpbasename).tar.xz
+
+upload-files: export/$(corpbasename).tar.xz
+	rsync -e ssh -avP --stats $< $(HOST):$(remotearch)/
 
 test:
 	python3 test/metadata.py
+
+
+

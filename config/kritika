@@ -36,6 +36,7 @@ STRUCTURE doc {
     ATTRIBUTE month
     ATTRIBUTE date
     ATTRIBUTE pages
+    ATTRIBUTE place
 }
 STRUCTURE f {
     ATTRIBUTE id
@@ -47,3 +48,4 @@ STRUCTURE s {
 SHORTREF "=doc.author,=doc.title,=doc.year,=doc.periodical"
 MAXCONTEXT 200
 MAXDETAIL 500
+SUBCDEF kritika.subcorpora
